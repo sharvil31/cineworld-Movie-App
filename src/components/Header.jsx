@@ -9,21 +9,30 @@ import { signOut } from "firebase/auth";
 const Header = () => {
   const [userName, setUserName] = useState({
     firstName: "",
-    lastName: ""
+    lastName: "",
   });
 
   const fetchUserName = async () => {
     auth.onAuthStateChanged(async (user) => {
       // setUserName(user);
-      const docRef = doc(db, "Users", user.uid);
-      const userDetails = await getDoc(docRef);
+      if (user) {
+        try {
+          const docRef = doc(db, "Users", user.uid);
+          const userDetails = await getDoc(docRef);
 
-      if(userDetails.exists()) {
-        const { firstName, lastName } = userDetails.data();
-        setUserName({ firstName, lastName });
-        console.log(firstName, lastName);
+          if (userDetails.exists()) {
+            const { firstName, lastName } = userDetails.data();
+            setUserName({ firstName, lastName });
+            console.log(firstName, lastName);
+          } else {
+            console.log("User in Not Logged in");
+          }
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+        }
       } else {
-        console.log("User in Not Logged in");
+        console.log("No user is logged in");
+        setUserName({ firstName: "", lastName: "" });
       }
     });
   };
@@ -35,7 +44,7 @@ const Header = () => {
   const location = useLocation();
   // const filteredQuery = location?.search?.slice(3).split("%20").join(" ");
   const [searchInput, setSearchInput] = useState("");
-  const [filteredQuery, setFilteredQuery] = useState("")
+  const [filteredQuery, setFilteredQuery] = useState("");
   console.log(filteredQuery);
   const navigate = useNavigate();
 
@@ -43,7 +52,7 @@ const Header = () => {
     const value = e.target.value;
     setSearchInput(value);
     setFilteredQuery(value);
-  }
+  };
 
   useEffect(() => {
     if (searchInput) {
@@ -69,11 +78,11 @@ const Header = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if(confirmLogout) {
+    if (confirmLogout) {
       await signOut(auth);
       // navigate("/login");
-    };
-  }
+    }
+  };
 
   return (
     <header className="fixed top-0 w-full h-16 md:h-20 bg-neutral-950 bg-opacity-50 backdrop-blur-lg z-40">
@@ -130,7 +139,10 @@ const Header = () => {
 
         <div className="flex items-center justify-center gap-5 lg:gap-8 ml-auto">
           <div className="lg:w-[350px] lg:border-2 py-1 border-white/40 focus-within:border-white/90 h-[30px] lg:h-[38px] flex items-center rounded-md px-2">
-            <form className="w-full hidden lg:flex items-center" onSubmit={handleSubmit}>
+            <form
+              className="w-full hidden lg:flex items-center"
+              onSubmit={handleSubmit}
+            >
               <input
                 type="text"
                 placeholder="Search Movie, TV Show,.."
@@ -146,7 +158,12 @@ const Header = () => {
               <p className="text-nowrap text-ellipsis">
                 {truncateName(userName?.firstName + " " + userName?.lastName)}
               </p>
-              <Link to={"/login"} title="Log out" onClick={handleLogout} className=" hover:text-white">
+              <Link
+                to={"/login"}
+                title="Log out"
+                onClick={handleLogout}
+                className=" hover:text-white"
+              >
                 <i class="ri-logout-box-fill ri-lg"></i>
               </Link>
             </div>
