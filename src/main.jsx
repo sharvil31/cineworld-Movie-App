@@ -43,23 +43,21 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "search",
+        path: "/search",
         element: <SearchPage />,
       },
     ],
   },
 
   {
-    path: "login",
+    path: "/login",
     element: <Login />,
   },
 
   {
-    path: "register",
+    path: "/register",
     element: <Register />,
   },
-
-  // <ToastContainer />
 ]);
 
 createRoot(document.getElementById("root")).render(
