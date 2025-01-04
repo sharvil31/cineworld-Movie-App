@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-neutral-900 text-neutral-300;
+  font-family: "Inter", serif;
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.removeScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+  /* background-color: #e0e0e0; Base color for the shimmer */
+}
+
+
+/* Shimmer animation */
+.shining-wave {
+  position: absolute;
+  top: 0;
+  left: -150%; /* Start off-screen */
+  width: 150%; /* Make it wide enough to cover the card */
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: skewX(-25deg); /* Creates the wave angle */
+  animation: shine-wave 1.5s infinite ease-in-out;
+}
+
+/* Wave animation */
+@keyframes shine-wave {
+  0% {
+    left: -150%;
+  }
+  50% {
+    left: 0%;
+  }
+  100% {
+    left: 150%;
+  }
+}
